@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RE:NA 在宅ワーク｜Trainer Dashboard</title>
+<style>
+:root{
+  --bg:#08111b; --panel:#0d1724; --panel2:#111f30; --line:#22364c;
+  --text:#eef5ff; --muted:#91a4bb; --blue:#58a6ff; --cyan:#7dd3fc;
+  --green:#74e0b5; --amber:#ffd166; --red:#ff8fa3; --purple:#b69cff;
+  --shadow:0 18px 50px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;background:radial-gradient(circle at 20% -10%,rgba(88,166,255,.16),transparent 30%),var(--bg);color:var(--text);line-height:1.55}
+.wrap{max-width:1240px;margin:auto;padding:24px 18px 60px}
+.topbar{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}
+.brand small{color:var(--cyan);font-weight:800;letter-spacing:.12em}.brand h1{margin:4px 0 0;font-size:clamp(28px,5vw,44px)}
+.badge{padding:8px 12px;border-radius:999px;background:rgba(116,224,181,.12);border:1px solid rgba(116,224,181,.25);color:var(--green);font-weight:800;font-size:13px}
+.grid{display:grid;gap:16px}.grid4{grid-template-columns:repeat(4,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:repeat(2,1fr)}
+.card{background:linear-gradient(180deg,rgba(17,31,48,.98),rgba(13,23,36,.98));border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:20px}
+.card h2,.card h3{margin:0 0 14px}.label{font-size:12px;color:var(--muted);font-weight:700}.metric{font-size:30px;font-weight:900;margin-top:4px}.sub{font-size:12px;color:var(--muted)}
+.progress{height:11px;border-radius:999px;background:#07111c;border:1px solid #1b2f43;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));width:0;transition:.25s}
+.hero{display:grid;grid-template-columns:1.55fr .8fr;gap:16px;margin-bottom:16px}.hero .card:first-child{padding:26px}.hero p{color:#cbd8e8;max-width:760px}.goal{font-size:36px;font-weight:900;margin:8px 0}
+.coach-note{background:linear-gradient(135deg,rgba(182,156,255,.12),rgba(88,166,255,.08));border:1px solid rgba(182,156,255,.24);border-radius:16px;padding:16px}
+.coach-note b{color:#d9cbff}.section{margin-top:16px}
+.menu-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px dashed #21364d}.menu-item:last-child{border-bottom:0}
+input[type=checkbox]{accent-color:var(--blue);transform:scale(1.15);margin-top:4px}.tag{font-size:11px;font-weight:800;border-radius:999px;padding:4px 8px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.22);color:var(--amber)}.tag.done{background:rgba(116,224,181,.1);border-color:rgba(116,224,181,.22);color:var(--green)}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini{background:#0a1521;border:1px solid #1d3247;border-radius:14px;padding:14px}
+textarea,input[type=text],input[type=number]{width:100%;background:#09131f;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit}textarea{min-height:105px;resize:vertical}
+button{border:0;border-radius:12px;padding:10px 14px;background:linear-gradient(135deg,#2f82d8,#58a6ff);color:white;font-weight:800;cursor:pointer}.secondary{background:#142338;border:1px solid var(--line);color:#d9e8f7}.danger{background:#3d222b;border:1px solid #663441;color:#ffd6df}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.timeline{display:grid;gap:10px}.log{padding:13px;border-radius:14px;background:#0a1521;border:1px solid #1e3449}.log strong{display:block;margin-bottom:5px}
+/* Gantt */
+.gantt-wrap{overflow-x:auto;padding-bottom:4px}.gantt{min-width:980px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0a1521}.g-row{display:grid;grid-template-columns:220px repeat(12,1fr);min-height:44px;border-bottom:1px solid #172a3c}.g-row:last-child{border-bottom:0}.g-head{background:#101d2c;font-weight:800}.g-cell,.g-name{padding:10px 8px;border-right:1px solid #172a3c;font-size:12px}.g-name{font-weight:800;background:#0d1927}.g-cell{text-align:center;color:#89a0b8}.gbar{margin:7px 4px;border-radius:8px;min-height:28px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#06111b}.c1{background:#7dd3fc}.c2{background:#58a6ff}.c3{background:#74e0b5}.c4{background:#ffd166}.c5{background:#b69cff}.c6{background:#ff9fb2}
+.fitgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.fititem{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid #1e3348;border-radius:12px;background:#0a1521}
+.footer{margin-top:28px;text-align:center;color:#6f8398;font-size:12px}
+@media(max-width:950px){.hero,.grid4,.grid3,.grid2{grid-template-columns:1fr}.fitgrid{grid-template-columns:1fr}} 
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><small>COACHING DASHBOARD</small><h1>RE:NA 在宅ワーク育成プログラム</h1></div>
+    <div class="badge">第1期｜12週間</div>
+  </div>
+
+  <section class="hero">
+    <div class="card">
+      <div class="label">PROGRAM GOAL</div>
+      <h2 style="font-size:28px;margin-top:6px">Mac初心者 → 在宅で仕事を受けて納品できる状態へ</h2>
+      <p>トレーナーが生徒をマネジメントするように、「今日のメニュー」「今週の重点」「到達ライン」「次の課題」を明確にして進める。まずは在宅月収5万円、その後10万→15万→在宅一本を目指す。</p>
+      <div class="coach-note"><b>Coachメモ：</b> 勉強量より「完成物」を優先。できなかった日は借金にせず、次に開いた日が次のDay。</div>
+    </div>
+    <div class="card">
+      <div class="label">FIRST INCOME TARGET</div><div class="goal">¥50,000/月</div>
+      <div class="sub">第1目標 → 10万円 → 15万円 → 本業化</div>
+      <div style="margin-top:18px" class="label">PROGRAM PROGRESS</div>
+      <div class="progress" style="margin-top:7px"><div id="overallBar" class="bar"></div></div>
+      <div id="overallText" class="sub" style="margin-top:7px">0%</div>
+    </div>
+  </section>
+
+  <section class="grid grid4">
+    <div class="card"><div class="label">COMPLETED DAYS</div><div class="metric" id="doneDays">1</div><div class="sub">Day 1 完了</div></div>
+    <div class="card"><div class="label">TOTAL FOCUS</div><div class="metric"><span id="focusMinutes">50</span>分</div><div class="sub">目標：1時間を疲れずに</div></div>
+    <div class="card"><div class="label">CURRENT PHASE</div><div class="metric" style="font-size:23px">PC基礎</div><div class="sub">Finder / 保存 / ショートカット</div></div>
+    <div class="card"><div class="label">COACH RATING</div><div class="metric" style="font-size:23px;color:var(--green)">順調</div><div class="sub">初日から約50分継続</div></div>
+  </section>
+
+  <section class="section grid grid2">
+    <div class="card">
+      <h2>今日のメニュー｜Day 1</h2>
+      <div class="menu-item"><input type="checkbox" checked disabled><div><b>Finderを使う</b><div class="sub">書類・フォルダの場所を知る</div></div><span class="tag done">DONE</span></div>
+      <div class="menu-item"><input type="checkbox" checked disabled><div><b>仕事用フォルダを作る</b><div class="sub">在宅WORK / 01_学習 など</div></div><span class="tag done">DONE</span></div>
+      <div class="menu-item"><input type="checkbox" checked disabled><div><b>画像整理・保存先変更</b><div class="sub">ピクチャを分類</div></div><span class="tag done">DONE</span></div>
+      <div class="menu-item"><input type="checkbox" checked disabled><div><b>TextEditで記録を作る</b><div class="sub">Day01_Mac基本操作</div></div><span class="tag done">DONE</span></div>
+    </div>
+    <div class="card">
+      <h2>次回セッション｜Day 2</h2>
+      <div class="menu-item"><input class="taskcheck" type="checkbox"><div><b>コピー / 貼り付け</b><div class="sub">⌘C / ⌘V</div></div><span class="tag">NEXT</span></div>
+      <div class="menu-item"><input class="taskcheck" type="checkbox"><div><b>元に戻す / 全選択 / 検索</b><div class="sub">⌘Z / ⌘A / ⌘F</div></div><span class="tag">NEXT</span></div>
+      <div class="menu-item"><input class="taskcheck" type="checkbox"><div><b>アプリ切替</b><div class="sub">⌘Tab</div></div><span class="tag">NEXT</span></div>
+      <div class="menu-item"><input class="taskcheck" type="checkbox"><div><b>Day 2 学習ログ</b><div class="sub">できた / 難しい / 集中時間</div></div><span class="tag">NEXT</span></div>
+    </div>
+  </section>
+
+  <section class="section card">
+    <h2>12週間ガントチャート</h2>
+    <div class="sub" style="margin-bottom:12px">横軸＝週、縦軸＝育成テーマ。今どこにいて、次に何をやるかを一目で確認。</div>
+    <div class="gantt-wrap"><div class="gantt">
+      <div class="g-row g-head"><div class="g-name">育成テーマ</div><div class="g-cell">W1</div><div class="g-cell">W2</div><div class="g-cell">W3</div><div class="g-cell">W4</div><div class="g-cell">W5</div><div class="g-cell">W6</div><div class="g-cell">W7</div><div class="g-cell">W8</div><div class="g-cell">W9</div><div class="g-cell">W10</div><div class="g-cell">W11</div><div class="g-cell">W12</div></div>
+      <div class="g-row"><div class="g-name">Mac / PC基礎</div><div class="gbar c1" style="grid-column:2/4">W1-2</div><div style="grid-column:4/14"></div></div>
+      <div class="g-row"><div class="g-name">Docs / Sheets</div><div style="grid-column:2/4"></div><div class="gbar c2" style="grid-column:4/6">W3-4</div><div style="grid-column:6/14"></div></div>
+      <div class="g-row"><div class="g-name">ChatGPT / 要約</div><div style="grid-column:2/6"></div><div class="gbar c3" style="grid-column:6/8">W5-6</div><div style="grid-column:8/14"></div></div>
+      <div class="g-row"><div class="g-name">模擬実務 / 案件市場</div><div style="grid-column:2/8"></div><div class="gbar c4" style="grid-column:8/10">W7-8</div><div style="grid-column:10/14"></div></div>
+      <div class="g-row"><div class="g-name">文章 / リサーチ強化</div><div style="grid-column:2/10"></div><div class="gbar c5" style="grid-column:10/12">W9-10</div><div style="grid-column:12/14"></div></div>
+      <div class="g-row"><div class="g-name">応募 / 初案件 / 納品</div><div style="grid-column:2/12"></div><div class="gbar c6" style="grid-column:12/14">W11-12</div></div>
+    </div></div>
+  </section>
+
+  <section class="section grid grid3">
+    <div class="card">
+      <h3>今週の重点</h3>
+      <div class="mini"><b>1. ファイル管理</b><div class="sub">保存場所を迷わない</div></div>
+      <div class="mini" style="margin-top:8px"><b>2. ショートカット</b><div class="sub">よく使う操作を身体で覚える</div></div>
+      <div class="mini" style="margin-top:8px"><b>3. 1時間集中の土台</b><div class="sub">25分×2でもOK</div></div>
+    </div>
+    <div class="card">
+      <h3>強み / 課題</h3>
+      <div class="kpi-row"><div class="mini"><div class="label">STRENGTH</div><b>調べる・整理する</b></div><div class="mini"><div class="label">CHALLENGE</div><b>PC慣れ・表現</b></div></div>
+      <div class="coach-note" style="margin-top:10px"><b>Coachメモ：</b> ライティング一本に決めず、リサーチ・整理・AI編集なども試して適性を見る。</div>
+    </div>
+    <div class="card">
+      <h3>働き方の条件</h3>
+      <div class="mini"><b>一人作業中心</b></div><div class="mini" style="margin-top:8px"><b>連絡は最低限</b></div><div class="mini" style="margin-top:8px"><b>電話中心は避ける</b></div>
+    </div>
+  </section>
+
+  <section class="section grid grid2">
+    <div class="card">
+      <h2>適性チェック</h2>
+      <div class="fitgrid">
+        <label class="fititem"><input class="fitcheck" type="checkbox"><span>Webリサーチ</span></label>
+        <label class="fititem"><input class="fitcheck" type="checkbox"><span>Webライティング</span></label>
+        <label class="fititem"><input class="fitcheck" type="checkbox"><span>AI文章整理 / リライト</span></label>
+        <label class="fititem"><input class="fitcheck" type="checkbox"><span>データ整理 / 入力</span></label>
+        <label class="fititem"><input class="fitcheck" type="checkbox"><span>商品情報整理</span></label>
+        <label class="fititem"><input class="fitcheck" type="checkbox"><span>文字起こし / 要約</span></label>
+      </div>
+      <div class="sub" style="margin-top:10px">「得意」「苦じゃない」「収入につながる」の3点で評価。</div>
+    </div>
+    <div class="card">
+      <h2>学習ログ追加</h2>
+      <label class="label">日付</label><input id="logDate" type="text" placeholder="例：2026/08/11">
+      <label class="label" style="display:block;margin-top:9px">集中時間（分）</label><input id="logMinutes" type="number" min="0" placeholder="例：45">
+      <label class="label" style="display:block;margin-top:9px">今日やったこと / 気づき</label><textarea id="logText"></textarea>
+      <div class="btns"><button id="addLog">記録する</button><button class="secondary" id="clearInputs">入力を消す</button></div>
+    </div>
+  </section>
+
+  <section class="section card"><h2>学習ログ</h2><div id="logs" class="timeline"></div></section>
+
+  <section class="section grid grid2">
+    <div class="card"><h2>トレーナーメモ</h2><textarea id="selfMemo">PCはほぼ初心者。調べて情報を集めること、細かく整理・分類することは得意寄り。文章は興味があるが、自己理解や表現はまだ難しさを感じる。</textarea><div class="btns"><button id="saveMemo">保存</button></div></div>
+    <div class="card"><h2>目標・条件メモ</h2><textarea id="workMemo">将来は在宅を本業にしたい。まずは月5万円。できれば一人で完結する仕事がいい。連絡は最低限なら可能。電話対応が多い仕事は避けたい。</textarea><div class="btns"><button id="saveWorkMemo">保存</button></div></div>
+  </section>
+
+  <section class="section card"><h2>データ管理</h2><div class="sub">入力内容はこのブラウザのlocalStorageに保存。同じブラウザなら続きから使えます。</div><div class="btns"><button class="secondary" id="exportBtn">進捗データを書き出す</button><button class="danger" id="resetBtn">すべてリセット</button></div></section>
+
+  <div class="footer">RE:NA HOME WORK COACHING｜12 WEEK PROGRAM</div>
+</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const state=JSON.parse(localStorage.getItem('renaDashboardV1')||'{}');
+if(!state.logs) state.logs=[{date:'2026/08/10',minutes:50,text:'Day 1 完了。Finder、仕事用フォルダ作成、画像整理、スクリーンショット、TextEditで学習記録を保存。'}];
+if(state.memo) $('#selfMemo').value=state.memo;if(state.workMemo) $('#workMemo').value=state.workMemo;
+$$('.taskcheck').forEach((e,i)=>{e.checked=!!(state.tasks&&state.tasks[i]);e.addEventListener('change',save)});
+$$('.fitcheck').forEach((e,i)=>{e.checked=!!(state.fit&&state.fit[i]);e.addEventListener('change',save)});
+function save(){state.tasks=$$('.taskcheck').map(x=>x.checked);state.fit=$$('.fitcheck').map(x=>x.checked);state.memo=$('#selfMemo').value;state.workMemo=$('#workMemo').value;localStorage.setItem('renaDashboardV1',JSON.stringify(state));render()}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function render(){const td=$$('.taskcheck').filter(x=>x.checked).length;const done=1+Math.floor(td/4);$('#doneDays').textContent=done;const mins=state.logs.reduce((a,b)=>a+(+b.minutes||0),0);$('#focusMinutes').textContent=mins;const prog=Math.min(100,Math.round(done/60*100));$('#overallBar').style.width=prog+'%';$('#overallText').textContent=prog+'%（Dayベース）';$$('.menu-item').forEach(row=>{const ck=row.querySelector('.taskcheck');if(!ck)return;const t=row.querySelector('.tag');t.textContent=ck.checked?'DONE':'NEXT';t.className='tag'+(ck.checked?' done':'')});const logs=$('#logs');logs.innerHTML='';[...state.logs].reverse().forEach((l,r)=>{const idx=state.logs.length-1-r,d=document.createElement('div');d.className='log';d.innerHTML=`<strong>${esc(l.date||'日付なし')}｜${+l.minutes||0}分</strong><div>${esc(l.text||'').replace(/\n/g,'<br>')}</div><div class="log-actions"><button class="secondary edit-log" data-idx="${idx}">編集 ✏️</button><button class="danger delete-log" data-idx="${idx}">削除 🗑️</button></div>`;logs.appendChild(d)});$$('.edit-log').forEach(b=>b.onclick=()=>{const i=+b.dataset.idx,l=state.logs[i],c=b.closest('.log');if(c.querySelector('.log-edit'))return;const e=document.createElement('div');e.className='log-edit';e.innerHTML=`<label>日付</label><input class="edit-date" value="${esc(l.date||'')}"><label>集中時間（分）</label><input class="edit-minutes" type="number" min="0" value="${+l.minutes||0}"><label>学習ログ</label><textarea class="edit-text">${esc(l.text||'')}</textarea><div class="btns"><button class="save-edit">変更を保存</button><button class="secondary cancel-edit">キャンセル</button></div>`;c.appendChild(e);e.querySelector('.save-edit').onclick=()=>{state.logs[i]={date:e.querySelector('.edit-date').value.trim(),minutes:+e.querySelector('.edit-minutes').value||0,text:e.querySelector('.edit-text').value.trim()};save()};e.querySelector('.cancel-edit').onclick=()=>e.remove()});$$('.delete-log').forEach(b=>b.onclick=()=>{const i=+b.dataset.idx,l=state.logs[i];if(confirm(`「${l.date||'日付なし'}」の学習ログを削除する？`)){state.logs.splice(i,1);save()}});localStorage.setItem('renaDashboardV1',JSON.stringify(state))}
+$('#addLog').onclick=()=>{const date=$('#logDate').value.trim(),minutes=+$('#logMinutes').value||0,text=$('#logText').value.trim();if(!date&&!minutes&&!text)return alert('何か入力してね');state.logs.push({date,minutes,text});$('#logDate').value=$('#logMinutes').value=$('#logText').value='';save()};
+$('#clearInputs').onclick=()=>{$('#logDate').value=$('#logMinutes').value=$('#logText').value=''};$('#saveMemo').onclick=save;$('#saveWorkMemo').onclick=save;
+$('#exportBtn').onclick=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='rena_progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+$('#resetBtn').onclick=()=>{if(confirm('本当に全部リセットする？')){localStorage.removeItem('renaDashboardV1');location.reload()}};
+render();
+</script>
+</body>
+</html>
